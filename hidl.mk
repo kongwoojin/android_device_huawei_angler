@@ -81,6 +81,11 @@ PRODUCT_PACKAGES += \
 # Light
  PRODUCT_PACKAGES += \
      android.hardware.light@2.0-service.angler
+     
+# Media
+PRODUCT_PROPERTY_OVERRIDES += \
+    debug.stagefright.omx_default_rank.sw-audio=1
+    debug.stagefright.omx_default_rank=0
 
 # NFC
 PRODUCT_PACKAGES += \
