@@ -109,6 +109,9 @@ DEVICE_MANIFEST_FILE := $(DEVICE_PATH)/manifest.xml
 DEVICE_MATRIX_FILE := $(DEVICE_PATH)/compatibility_matrix.xml
 TARGET_FS_CONFIG_GEN += $(DEVICE_PATH)/config.fs
 
+# IPA
+TARGET_USES_NO_MTU_IPACM := true
+
 #NFC
 NXP_CHIP_TYPE := 2
 
