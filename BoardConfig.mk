@@ -13,92 +13,102 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+
+DEVICE_PATH := device/huawei/angler
+
 BUILD_BROKEN_DUP_RULES := true
 BUILD_BROKEN_USES_BUILD_COPY_HEADERS := true
 
-TARGET_BOARD_PLATFORM := msm8994
-TARGET_BOOTLOADER_BOARD_NAME := angler
-
+# Architecture
 TARGET_ARCH := arm64
 TARGET_ARCH_VARIANT := armv8-a
 TARGET_CPU_ABI := arm64-v8a
 TARGET_CPU_ABI2 :=
 TARGET_CPU_VARIANT := cortex-a53
 
+# Second architecture
 TARGET_2ND_ARCH := arm
 TARGET_2ND_ARCH_VARIANT := armv8-a
 TARGET_2ND_CPU_ABI := armeabi-v7a
 TARGET_2ND_CPU_ABI2 := armeabi
 TARGET_2ND_CPU_VARIANT := cortex-a53.a57
 
-# Inline kernel building
-TARGET_KERNEL_ARCH := arm64
-TARGET_KERNEL_HEADER_ARCH := arm64
-# TARGET_KERNEL_CROSS_COMPILE_PREFIX := aarch64-elf-
-# KERNEL_TOOLCHAIN := $(PWD)/prebuilts/gcc/linux-x86/arm64-gcc/bin
-TARGET_KERNEL_SOURCE := kernel/huawei/angler
-TARGET_KERNEL_CONFIG := lineageos_angler_defconfig
-BOARD_KERNEL_IMAGE_NAME := Image.gz-dtb
-TARGET_NOT_USE_GZIP_RECOVERY_RAMDISK := true
+TARGET_USES_AOSP := true
 
-TARGET_COMPILE_WITH_MSM_KERNEL := true
+# Bootloader
+TARGET_NO_BOOTLOADER := true
+TARGET_NO_RADIOIMAGE := true
+TARGET_BOARD_PLATFORM := msm8994
+TARGET_BOOTLOADER_BOARD_NAME := angler
+TARGET_BOARD_INFO_FILE := $(DEVICE_PATH)/board-info.txt
 
+# kernel
 BOARD_KERNEL_BASE        := 0x00000000
 BOARD_KERNEL_PAGESIZE    := 4096
 BOARD_KERNEL_TAGS_OFFSET := 0x01E00000
 BOARD_RAMDISK_OFFSET     := 0x02000000
-
 BOARD_KERNEL_CMDLINE := androidboot.hardware=angler androidboot.console=ttyHSL0 msm_rtb.filter=0x37 ehci-hcd.park=3 lpm_levels.sleep_disabled=1 boot_cpus=0-3 no_console_suspend swiotlb=2048
-BOARD_KERNEL_CMDLINE += loop.max_part=7 androidboot.selinux=permissive
-# system-as-root
-BOARD_BUILD_SYSTEM_ROOT_IMAGE := true
 BOARD_KERNEL_CMDLINE += skip_initramfs rootwait ro init=/init root=/dev/dm-0
 BOARD_KERNEL_CMDLINE += dm=\"system none ro,0 1 android-verity /dev/mmcblk0p43\"
-
+BOARD_KERNEL_CMDLINE += loop.max_part=7 androidboot.selinux=permissive
 BOARD_MKBOOTIMG_ARGS := --ramdisk_offset $(BOARD_RAMDISK_OFFSET) --tags_offset $(BOARD_KERNEL_TAGS_OFFSET)
+TARGET_KERNEL_SOURCE := kernel/huawei/angler
+TARGET_KERNEL_CONFIG := lineageos_angler_defconfig
+BOARD_KERNEL_IMAGE_NAME := Image.gz-dtb
+TARGET_COMPILE_WITH_MSM_KERNEL := true
+TARGET_KERNEL_ARCH := arm64
+TARGET_KERNEL_HEADER_ARCH := arm64
+TARGET_NOT_USE_GZIP_RECOVERY_RAMDISK := true
 
+# APEX
+TARGET_FLATTEN_APEX := true
+
+# Audio
 BOARD_USES_ALSA_AUDIO := true
-AUDIO_FEATURE_ENABLED_DSM_FEEDBACK := true
-# Needed for VoLTE
 AUDIO_FEATURE_ENABLED_MULTI_VOICE_SESSIONS := true
+AUDIO_FEATURE_ENABLED_DSM_FEEDBACK := true
+USE_XML_AUDIO_POLICY_CONF := 1
 
+# Bluetooth
 BOARD_HAVE_BLUETOOTH := true
 BOARD_HAVE_BLUETOOTH_BCM := true
-BOARD_BLUETOOTH_BDROID_BUILDCFG_INCLUDE_DIR := device/huawei/angler/bluetooth
-BOARD_CUSTOM_BT_CONFIG := device/huawei/angler/bluetooth/vnd_angler.txt
+BOARD_BLUETOOTH_BDROID_BUILDCFG_INCLUDE_DIR := $(DEVICE_PATH)/bluetooth
+BOARD_CUSTOM_BT_CONFIG := $(DEVICE_PATH)/bluetooth/vnd_angler.txt
 
-BOARD_USES_SECURE_SERVICES := true
-TARGET_DISABLE_POSTRENDER_CLEANUP := true
+# Camera
+BOARD_QTI_CAMERA_32BIT_ONLY := true
 
-TARGET_NO_BOOTLOADER := true
-TARGET_NO_RADIOIMAGE := true
-TARGET_BOARD_INFO_FILE := device/huawei/angler/board-info.txt
-TARGET_NO_RPC := true
-
-# Shader cache config options
-# Maximum size of the  GLES Shaders that can be cached for reuse.
-# Increase the size if shaders of size greater than 12KB are used.
+# Display
 MAX_EGL_CACHE_KEY_SIZE := 12*1024
-
-# Maximum GLES shader cache size for each app to store the compiled shader
-# binaries. Decrease the size if RAM or Flash Storage size is a limitation
-# of the device.
 MAX_EGL_CACHE_SIZE := 2048*1024
-
 TARGET_USES_ION := true
 TARGET_USES_C2D_COMPOSITION := true
 TARGET_USES_GRALLOC1_ADAPTER := true
 TARGET_FORCE_HWC_FOR_VIRTUAL_DISPLAYS := true
 MAX_VIRTUAL_DISPLAY_DIMENSION := 2048
 TARGET_USES_HWC2 := true
+TARGET_ADDITIONAL_GRALLOC_10_USAGE_BITS := 0x2000U | 0x02000000U
 VSYNC_EVENT_PHASE_OFFSET_NS := 2000000
 SF_VSYNC_EVENT_PHASE_OFFSET_NS := 6000000
 NUM_FRAMEBUFFER_SURFACE_BUFFERS := 3
-
+TARGET_AUX_OS_VARIANT_LIST := angler
 OVERRIDE_RS_DRIVER:= libRSDriver_adreno.so
-BOARD_CHARGER_DISABLE_INIT_BLANK := true
-TARGET_USES_NON_LEGACY_POWERHAL := true
 
+# GPS
+BOARD_VENDOR_QCOM_GPS_LOC_API_HARDWARE := $(TARGET_BOARD_PLATFORM)
+BOARD_VENDOR_QCOM_LOC_PDK_FEATURE_SET := true
+TARGET_NO_RPC := true
+
+# HIDL
+PRODUCT_ENFORCE_VINTF_MANIFEST_OVERRIDE := true
+DEVICE_MANIFEST_FILE := $(DEVICE_PATH)/manifest.xml
+DEVICE_MATRIX_FILE := $(DEVICE_PATH)/compatibility_matrix.xml
+TARGET_FS_CONFIG_GEN += $(DEVICE_PATH)/config.fs
+
+#NFC
+NXP_CHIP_TYPE := 2
+
+# Partitions
 TARGET_USERIMAGES_USE_EXT4 := true
 BOARD_BOOTIMAGE_PARTITION_SIZE := 33554432
 BOARD_RECOVERYIMAGE_PARTITION_SIZE := 33554432
@@ -109,61 +119,35 @@ BOARD_USERDATAIMAGE_PARTITION_SIZE := 26503790080
 BOARD_CACHEIMAGE_PARTITION_SIZE := 104857600
 BOARD_CACHEIMAGE_FILE_SYSTEM_TYPE := ext4
 BOARD_FLASH_BLOCK_SIZE := 131072
-
 BOARD_VENDORIMAGE_PARTITION_SIZE := 209715200
 BOARD_VENDORIMAGE_FILE_SYSTEM_TYPE    := squashfs
 BOARD_VENDORIMAGE_JOURNAL_SIZE        := 0
 BOARD_VENDORIMAGE_SQUASHFS_COMPRESSOR := lz4
+TARGET_COPY_OUT_VENDOR := vendor
 
-# Use mke2fs to create ext4 images
+BOARD_USES_SECURE_SERVICES := true
+TARGET_DISABLE_POSTRENDER_CLEANUP := true
+BOARD_ROOT_EXTRA_FOLDERS := firmware persist
 TARGET_USES_MKE2FS := true
 
-TARGET_AUX_OS_VARIANT_LIST := angler
+# Power
+TARGET_USES_INTERACTION_BOOST := true
+BOARD_CHARGER_DISABLE_INIT_BLANK := true
+TARGET_USES_NON_LEGACY_POWERHAL := true
 
-TARGET_RECOVERY_FSTAB = device/huawei/angler/rootdir/etc/recovery.fstab
-TARGET_COPY_OUT_VENDOR := vendor
-TARGET_RELEASETOOLS_EXTENSIONS := device/huawei/angler
+# Recovery
+TARGET_RECOVERY_UI_LIB := librecovery_ui_nanohub
+BOARD_SUPPRESS_SECURE_ERASE := true
+TARGET_RECOVERY_FSTAB = $(DEVICE_PATH)/rootdir/etc/recovery.fstab
 
-BOARD_ROOT_EXTRA_FOLDERS := firmware persist
+# Releasetools
+TARGET_RELEASETOOLS_EXTENSIONS := $(DEVICE_PATH)
 
+# SELinux
+BOARD_SEPOLICY_DIRS += $(DEVICE_PATH)/sepolicy/vendor
 SELINUX_IGNORE_NEVERALLOWS := true
 SELINUX_IGNORE_NEVERALLOWS_ON_USER := true
-BOARD_SEPOLICY_DIRS += device/huawei/angler/sepolicy/vendor
-BOARD_PLAT_PRIVATE_SEPOLICY_DIR += device/huawei/angler/sepolicy/private
-
-TARGET_USES_AOSP := true
-
-TARGET_USES_INTERACTION_BOOST := true
-
-TARGET_RECOVERY_UI_LIB := librecovery_ui_nanohub
-
-# Force camera module to be compiled only in 32-bit mode on 64-bit systems
-# Once camera module can run in the native mode of the system (either
-# 32-bit or 64-bit), the following line should be deleted
-BOARD_QTI_CAMERA_32BIT_ONLY := true
-
-# Wifi related defines
-BOARD_WPA_SUPPLICANT_DRIVER := NL80211
-WPA_SUPPLICANT_VERSION := VER_0_8_X
-BOARD_WPA_SUPPLICANT_PRIVATE_LIB := lib_driver_cmd_bcmdhd
-BOARD_HOSTAPD_DRIVER := NL80211
-BOARD_HOSTAPD_PRIVATE_LIB := lib_driver_cmd_bcmdhd
-BOARD_WLAN_DEVICE := bcmdhd
-WIFI_DRIVER_FW_PATH_PARAM := "/sys/module/bcmdhd/parameters/firmware_path"
-WIFI_DRIVER_FW_PATH_STA := "/vendor/firmware/fw_bcmdhd.bin"
-WIFI_DRIVER_FW_PATH_AP := "/vendor/firmware/fw_bcmdhd_apsta.bin"
-WIFI_HIDL_UNIFIED_SUPPLICANT_SERVICE_RC_ENTRY := true
-WIFI_AVOID_IFACE_RESET_MAC_CHANGE := true
-
-#GPS
-BOARD_VENDOR_QCOM_GPS_LOC_API_HARDWARE := $(TARGET_BOARD_PLATFORM)
-BOARD_VENDOR_QCOM_LOC_PDK_FEATURE_SET := true
-
-#NFC
-NXP_CHIP_TYPE := 2
-
-# Graphics
-TARGET_ADDITIONAL_GRALLOC_10_USAGE_BITS := 0x2000U | 0x02000000U
+BOARD_PLAT_PRIVATE_SEPOLICY_DIR += $(DEVICE_PATH)/sepolicy/private
 
 # Shims
 TARGET_LD_SHIM_LIBS := \
@@ -171,18 +155,24 @@ TARGET_LD_SHIM_LIBS := \
     /vendor/lib64/libcne.so|libcutils_shim.so \
     /vendor/lib64/libril-qc-qmi-1.so|libaudioclient_shim.so \
 
+# system-as-root
+BOARD_BUILD_SYSTEM_ROOT_IMAGE := true
+
+
 # Testing related defines
 BOARD_PERFSETUP_SCRIPT := platform_testing/scripts/perf-setup/angler-setup.sh
 
-TARGET_FS_CONFIG_GEN += device/huawei/angler/config.fs
-
-PRODUCT_ENFORCE_VINTF_MANIFEST_OVERRIDE := true
-DEVICE_MANIFEST_FILE := device/huawei/angler/manifest.xml
-DEVICE_MATRIX_FILE := device/huawei/angler/compatibility_matrix.xml
-
-# Enable workaround for slow rom flash
-BOARD_SUPPRESS_SECURE_ERASE := true
-
-TARGET_FLATTEN_APEX := true
+# Wifi
+BOARD_WLAN_DEVICE := bcmdhd
+WPA_SUPPLICANT_VERSION := VER_0_8_X
+BOARD_WPA_SUPPLICANT_DRIVER := NL80211
+BOARD_WPA_SUPPLICANT_PRIVATE_LIB := lib_driver_cmd_bcmdhd
+BOARD_HOSTAPD_DRIVER := NL80211
+BOARD_HOSTAPD_PRIVATE_LIB := lib_driver_cmd_bcmdhd
+WIFI_DRIVER_FW_PATH_PARAM := "/sys/module/bcmdhd/parameters/firmware_path"
+WIFI_DRIVER_FW_PATH_STA := "/vendor/firmware/fw_bcmdhd.bin"
+WIFI_DRIVER_FW_PATH_AP := "/vendor/firmware/fw_bcmdhd_apsta.bin"
+WIFI_HIDL_UNIFIED_SUPPLICANT_SERVICE_RC_ENTRY := true
+WIFI_AVOID_IFACE_RESET_MAC_CHANGE := true
 
 -include vendor/huawei/angler/BoardConfigVendor.mk
