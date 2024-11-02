@@ -49,8 +49,6 @@ BOARD_KERNEL_PAGESIZE    := 4096
 BOARD_KERNEL_TAGS_OFFSET := 0x01E00000
 BOARD_RAMDISK_OFFSET     := 0x02000000
 BOARD_KERNEL_CMDLINE := androidboot.hardware=angler msm_rtb.filter=0x37 ehci-hcd.park=3 lpm_levels.sleep_disabled=1 boot_cpus=0-3 swiotlb=2048
-BOARD_KERNEL_CMDLINE += skip_initramfs rootwait ro init=/init root=/dev/dm-0
-BOARD_KERNEL_CMDLINE += dm=\"system none ro,0 1 android-verity /dev/mmcblk0p43\"
 BOARD_KERNEL_CMDLINE += loop.max_part=7 androidboot.selinux=permissive
 BOARD_MKBOOTIMG_ARGS := --ramdisk_offset $(BOARD_RAMDISK_OFFSET) --tags_offset $(BOARD_KERNEL_TAGS_OFFSET)
 TARGET_KERNEL_SOURCE := kernel/huawei/angler
@@ -161,9 +159,6 @@ TARGET_LD_SHIM_LIBS := \
     /vendor/bin/ATFWD-daemon|libcutils_shim.so \
     /vendor/lib64/libcne.so|libcutils_shim.so \
     /vendor/lib64/libril-qc-qmi-1.so|libaudioclient_shim.so \
-
-# system-as-root
-BOARD_BUILD_SYSTEM_ROOT_IMAGE := true
 
 
 # Testing related defines
