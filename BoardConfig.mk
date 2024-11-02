@@ -49,7 +49,7 @@ BOARD_KERNEL_PAGESIZE    := 4096
 BOARD_KERNEL_TAGS_OFFSET := 0x01E00000
 BOARD_RAMDISK_OFFSET     := 0x02000000
 BOARD_KERNEL_CMDLINE := androidboot.hardware=angler androidboot.console=ttyHSL0 msm_rtb.filter=0x37 ehci-hcd.park=3 lpm_levels.sleep_disabled=1 boot_cpus=0-3 no_console_suspend swiotlb=2048
-BOARD_KERNEL_CMDLINE += loop.max_part=7 androidboot.selinux=permissive
+BOARD_KERNEL_CMDLINE += loop.max_part=7 androidboot.selinux=permissive androidboot.boot_devices=soc.0/f9824900.sdhci
 BOARD_MKBOOTIMG_ARGS := --ramdisk_offset $(BOARD_RAMDISK_OFFSET) --tags_offset $(BOARD_KERNEL_TAGS_OFFSET)
 TARGET_KERNEL_SOURCE := kernel/huawei/angler
 TARGET_KERNEL_CONFIG := lineageos_angler_defconfig
@@ -143,7 +143,7 @@ TARGET_USES_NON_LEGACY_POWERHAL := true
 # Recovery
 TARGET_RECOVERY_UI_LIB := librecovery_ui_nanohub
 BOARD_SUPPRESS_SECURE_ERASE := true
-TARGET_RECOVERY_FSTAB = $(DEVICE_PATH)/rootdir/etc/recovery.fstab
+TARGET_RECOVERY_FSTAB = $(DEVICE_PATH)/rootdir/etc/fstab.angler
 
 # Releasetools
 TARGET_RELEASETOOLS_EXTENSIONS := $(DEVICE_PATH)

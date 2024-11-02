@@ -24,6 +24,15 @@ $(call inherit-product, frameworks/native/build/phone-xhdpi-2048-dalvik-heap.mk)
 
 PRODUCT_TAGS += dalvik.gc.type-precise
 
+# Init
+PRODUCT_PACKAGES += \
+    init.angler.rc \
+    init.angler.usb.rc \
+    fstab.angler \
+    init.recovery.angler.rc \
+    init.angler.sensorhub.rc \
+    init.angler.nanohub.rc
+
 # AAPT
 PRODUCT_AAPT_CONFIG := normal
 PRODUCT_AAPT_PREF_CONFIG := 560dpi
@@ -168,15 +177,15 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/rootdir/bin/init.qcom.devstart.sh:$(TARGET_COPY_OUT_VENDOR)/bin/init.qcom.devstart.sh	\
     $(LOCAL_PATH)/rootdir/bin/init.qcom.devwait.sh:$(TARGET_COPY_OUT_VENDOR)/bin/init.qcom.devwait.sh \
     $(LOCAL_PATH)/rootdir/bin/init.radio.sh:$(TARGET_COPY_OUT_VENDOR)/bin/init.radio.sh \
-    $(LOCAL_PATH)/rootdir/etc/fstab.angler:root/fstab.angler \
+    $(LOCAL_PATH)/rootdir/etc/fstab.angler:$(TARGET_COPY_OUT_ROOT)/fstab.angler \
+    $(LOCAL_PATH)/rootdir/etc/fstab.angler:$(TARGET_COPY_OUT_RAMDISK)/fstab.angler \
     $(LOCAL_PATH)/rootdir/etc/init.angler.diag.rc.user:root/init.angler.diag.rc \
     $(LOCAL_PATH)/rootdir/etc/init.angler.diag.rc.userdebug:root/init.angler.diag.rc \
+    $(LOCAL_PATH)/rootdir/etc/init.angler.diag.rc.userdebug:$(TARGET_COPY_OUT_VENDOR)/etc/hw/init.angler.diag.rc \
     $(LOCAL_PATH)/rootdir/etc/init.angler.nanohub.rc:root/init.angler.sensorhub.rc \
-    $(LOCAL_PATH)/rootdir/etc/init.angler.rc:root/init.angler.rc \
     $(LOCAL_PATH)/rootdir/etc/init.angler.sensorhub.rc:root/init.angler.sensorhub.rc \
-    $(LOCAL_PATH)/rootdir/etc/init.angler.usb.rc:root/init.angler.usb.rc \
-    $(LOCAL_PATH)/rootdir/etc/init.recovery.angler.rc:root/init.recovery.angler.rc \
-    $(LOCAL_PATH)/rootdir/etc/ueventd.angler.rc:root/ueventd.angler.rc
+    $(LOCAL_PATH)/rootdir/etc/ueventd.angler.rc:root/ueventd.angler.rc \
+    $(LOCAL_PATH)/rootdir/etc/ueventd.angler.rc:$(TARGET_COPY_OUT_VENDOR)/etc/ueventd.rc
 
 # Keylayouts
 PRODUCT_COPY_FILES += \
